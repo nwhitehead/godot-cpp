@@ -18,6 +18,9 @@ logs/*
 # The default cache directory
 cache/
 
+# CMake build directory
+build/
+
 # Binaries
 *.o
 *.os
