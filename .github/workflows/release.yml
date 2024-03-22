@@ -1,0 +1,68 @@
+name: Binary Release
+run-name: Building binary godot-cpp release 🚀
+on: [push]
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Release, Debug]
+        include:
+        - name: 🐧 Linux (GCC)
+          os: [ubuntu-20.04]
+
+    steps:
+
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Try to use cache if available to save time
+      uses: actions/cache@v4
+      with:
+        path: |
+          build
+          !build/CMakeCache.txt
+        key: ${{ runner.os }}.${{ matrix.build_type }}.${{ hashFiles('**/') }}
+        restore-keys: ${{ runner.os }}.${{ matrix.build_type }}
+
+    - name: Configure CMake
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{ github.workspace }}
+
+    - name: Build
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+    - name: Archive
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist.${{ runner.os }}.${{ matrix.build_type }}
+        path: |
+            ${{ steps.strings.outputs.build-output-dir }}/bin
+
+  package:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        pattern: dist*
+        merge-multiple: true
+    - run: ls -R dist
+    - name: Release archive
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: dist
