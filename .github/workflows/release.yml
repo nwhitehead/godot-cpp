@@ -33,6 +33,9 @@ jobs:
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3
 
+    - name: Setup Ninja
+      uses: ashutoshvarma/setup-ninja@master
+
     - name: Set reusable strings
       id: strings
       shell: bash
