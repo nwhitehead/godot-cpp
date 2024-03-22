@@ -12,10 +12,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Release, Debug]
+        build_type: [Release]
         include:
         - name: 🐧 Linux (GCC)
           os: [ubuntu-20.04]
+          package-source: true
 
     steps:
 
@@ -46,12 +47,19 @@ jobs:
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-    - name: Archive
+    - name: Archive binary
       uses: actions/upload-artifact@v4
       with:
         name: dist.${{ runner.os }}.${{ matrix.build_type }}
         path: |
             ${{ steps.strings.outputs.build-output-dir }}/bin
+
+    - name: Archive include
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist.${{ runner.os }}.${{ matrix.build_type }}.include
+        path: |
+            ${{ steps.strings.outputs.build-output-dir }}/gen/include
 
   package:
     needs: build
