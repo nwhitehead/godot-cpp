@@ -1,5 +1,8 @@
 # godot-cpp
 
+This project aims to use Github Actions to build binary releases of `godot-cpp` for use in writing
+gdextensions without needing to compile `godot-cpp`.
+
 > **Warning**
 >
 > This repository's `master` branch is only usable with
