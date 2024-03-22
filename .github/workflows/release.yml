@@ -2,8 +2,9 @@ name: Binary Release
 run-name: Building binary godot-cpp release 🚀
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - '4.1'
+      - '4.2'
 jobs:
   build:
     name: ${{ matrix.name }}
