@@ -21,7 +21,11 @@ jobs:
           - name: 🏁 Windows (MSVC)
             os: windows-2019
             build_type: Release
-    
+
+          - name: 🍎 macOS (universal)
+            os: macos-11
+            build_type: Release
+
     env:
       SCCACHE_GHA_ENABLED: "true"
 
