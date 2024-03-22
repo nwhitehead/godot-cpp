@@ -205,6 +205,12 @@ else()
 	set(OUTPUT_NAME "godot-cpp.${SYSTEM_NAME}.${BUILD_TYPE}.${BITS}")
 endif()
 
+# LIB_ARCH is the architecture being built. It is set to the build system's architecture.
+# For macOS, we build a universal library (both arm64 and x86_64).
+if ( APPLE )
+    set( LIB_ARCH "universal" )
+endif()
+
 set_target_properties(${PROJECT_NAME}
 	PROPERTIES
 		CXX_EXTENSIONS OFF
